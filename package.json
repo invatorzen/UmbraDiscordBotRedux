@@ -1,0 +1,10 @@
+{
+    "name": "UmbraDiscordBotRedux",
+    "version": "0.0.0",
+    "main": "source/index.js",
+    "dependencies": {
+        "commandkit": "^0.0.9",
+        "discord.js": "^14.13.0",
+        "dotenv": "^16.3.1"
+    }
+}
