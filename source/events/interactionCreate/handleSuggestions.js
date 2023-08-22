@@ -70,9 +70,13 @@ module.exports = async (interaction) => {
         if (action === 'upvote') {
 
             const hasVoted = targetSuggestion.upvotes.includes(interaction.user.id) || targetSuggestion.downvotes.includes(interaction.user.id);
+            const hasStatus = targetSuggestion.status === 'approved' || targetSuggestion.status === 'rejected';
 
             if (hasVoted) {
                 await interaction.editReply('You have already voted on this suggestion!');
+                return;
+            } else if (hasStatus) {
+                await interaction.editReply('You cannot vote on this suggestion as it\'s already been approved or rejected!');
                 return;
             }
 
@@ -92,10 +96,14 @@ module.exports = async (interaction) => {
 
         if (action === 'downvote') {
 
-            const hasVoted = targetSuggestion.upvotes.includes(interaction.user.id) || targetSuggestions.downvotes.includes(interaction.user.id);
+            const hasVoted = targetSuggestion.upvotes.includes(interaction.user.id) || targetSuggestion.downvotes.includes(interaction.user.id);
+            const hasStatus = targetSuggestion.status === 'approved' || targetSuggestion.status === 'rejected';
 
             if (hasVoted) {
                 await interaction.editReply('You have already voted on this suggestion!');
+                return;
+            } else if (hasStatus) {
+                await interaction.editReply('You cannot vote on this suggestion as it\'s already been approved or rejected!');
                 return;
             }
 
