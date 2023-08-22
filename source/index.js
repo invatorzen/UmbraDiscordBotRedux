@@ -11,6 +11,8 @@ new CommandKit({
     client,
     commandsPath: `${__dirname}/commands`,
     eventsPath: `${__dirname}/events`,
+    devGuildIds: [process.env.DEV_GUILD_ID],
+    devUserIds: [process.env.DEV_USER_ID],
 });
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
