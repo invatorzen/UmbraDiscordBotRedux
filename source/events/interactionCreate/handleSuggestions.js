@@ -29,7 +29,7 @@ module.exports = async (interaction) => {
     
             targetSuggestion.status = 'approved';
     
-            targetMessageEmbed.color = 0x84e660; // Green Hex code
+            targetMessageEmbed.data.color = 0x84e660; // Green Hex code
             targetMessageEmbed.fields[1].value = `✅ Approved`;
     
             await targetSuggestion.save();
@@ -52,7 +52,7 @@ module.exports = async (interaction) => {
             
             targetSuggestion.status = 'rejected';
     
-            targetMessageEmbed.color = 0xff6161; // Red Hex code
+            targetMessageEmbed.data.color = 0xff6161; // Red Hex code
             targetMessageEmbed.fields[1].value = `❌ Rejected`;
     
             await targetSuggestion.save();
