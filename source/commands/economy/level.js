@@ -10,7 +10,7 @@ const data = {
       {
         name: 'target-user',
         description: 'The user to show the level of.',
-        type: ApplicationCommandOptionType.Mentionable,
+        type: ApplicationCommandOptionType.User,
       },
   ],
 };
