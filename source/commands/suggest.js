@@ -89,7 +89,7 @@ module.exports = {
             iconURL: interaction.user.displayAvatarURL({size: 256}),
         })
         .addFields([
-            {name: 'Suggestion', value: suggestionText},
+            {name: 'Question', value: suggestionText},
             {name: 'Status', value: 'Pending'},
             {name: 'Votes', value: formatResults()},
         ])
@@ -97,14 +97,14 @@ module.exports = {
 
         // Buttons
         const upvoteButton = new ButtonBuilder()
-          .setEmoji('👍')
-          .setLabel('Upvote')
+          .setEmoji('1️⃣')
+          .setLabel('Option 1')
           .setStyle(ButtonStyle.Primary) // Blue
           .setCustomId(`suggestion.${newSuggestion.suggestionId}.upvote`);
 
         const downvoteButton = new ButtonBuilder()
-          .setEmoji('👎')
-          .setLabel('Downvote')
+          .setEmoji('2️⃣')
+          .setLabel('Option 2')
           .setStyle(ButtonStyle.Primary) // Red
           .setCustomId(`suggestion.${newSuggestion.suggestionId}.downvote`);
 
@@ -126,7 +126,7 @@ module.exports = {
 
         // Edit suggestion message
         suggestionMessage.edit({
-            content: `${interaction.user} Suggestion created!`,
+            content: ``, //content: `${interaction.user} Suggestion created!`,
             embeds: [suggestionEmebed],
             components: [firstRow, secondRow],
         });

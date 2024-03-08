@@ -52,6 +52,7 @@ module.exports = async (message, client) => {
         else {
           // Create new level
             const newLevel = new Level({
+                userName: message.author.username,
                 userId: message.author.id,
                 guildId: message.guild.id,
                 xp: xpToGive,

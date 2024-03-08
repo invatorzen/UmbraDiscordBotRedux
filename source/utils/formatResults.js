@@ -27,9 +27,9 @@ const pb = { // Make sure to update these for Umbra server
   
     const results = [];
     results.push(
-      `👍 ${upvotes.length} upvotes (${upPercentage.toFixed(1)}%) • 👎 ${
+      `🗳️ ${upvotes.length} Option 1 (${upPercentage.toFixed(1)}%) • 🗳️ ${
         downvotes.length
-      } downvotes (${downPercentage.toFixed(1)}%)`
+      } Option 2 (${downPercentage.toFixed(1)}%)`
     );
     results.push(progressBar);
   

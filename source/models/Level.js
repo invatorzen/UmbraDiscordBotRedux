@@ -1,6 +1,11 @@
 const { Schema, model } = require('mongoose');
 
+// Sent to Mongoosedb
 const levelSchema = new Schema({
+  userName: {
+    type: String,
+    required: true,
+  },
   userId: {
     type: String,
     required: true,

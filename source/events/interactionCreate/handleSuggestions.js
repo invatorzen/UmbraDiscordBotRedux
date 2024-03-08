@@ -83,7 +83,7 @@ module.exports = async (interaction) => {
             targetSuggestion.upvotes.push(interaction.user.id);
             await targetSuggestion.save();
 
-            interaction.editReply('Upvoted suggestion!');
+            interaction.editReply('You picked option 1!');
 
             targetMessageEmbed.fields[2].value = formatResults(targetSuggestion.upvotes, targetSuggestion.downvotes);
 
@@ -110,7 +110,7 @@ module.exports = async (interaction) => {
             targetSuggestion.downvotes.push(interaction.user.id);
             await targetSuggestion.save();
 
-            interaction.editReply('Downvoted suggestion!');
+            interaction.editReply('You picked option 2!');
 
             targetMessageEmbed.fields[2].value = formatResults(targetSuggestion.upvotes, targetSuggestion.downvotes);
 
