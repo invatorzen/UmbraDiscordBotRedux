@@ -23,6 +23,7 @@ module.exports = async (message, client) => {
     const query = {
         userId: message.author.id,
         guildId: message.guild.id,
+        guildName: message.guild.name,
     };
 
     try {
@@ -54,20 +55,20 @@ module.exports = async (message, client) => {
             const newLevel = new Level({
                 userName: message.author.username,
                 userId: message.author.id,
+                guildName: message.guild.name,
                 guildId: message.guild.id,
                 xp: xpToGive,
             });
-
-            await newLevel.save();
-            cooldowns.add(message.author.id);
-            setTimeout(() => {
-                cooldowns.delete(message.author.id);
-            }, 60000);
-
-            await newLevel.save().catch((error) => {
+            try {
+                await newLevel.save();
+                cooldowns.add(message.author.id);
+                setTimeout(() => {
+                    cooldowns.delete(message.author.id);
+                }, 60000);
+            } catch (error) {
                 console.log(`Error saving new level: ${error}`);
                 return;
-            });
+            }
         }
 
     } catch (error) {

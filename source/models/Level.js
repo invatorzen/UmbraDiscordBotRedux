@@ -10,6 +10,10 @@ const levelSchema = new Schema({
     type: String,
     required: true,
   },
+  guildName: {
+    type: String,
+    required: true,
+  },
   guildId: {
     type: String,
     required: true,

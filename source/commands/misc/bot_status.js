@@ -44,6 +44,7 @@ async function run({ interaction, client }) {
 }
 
 const options = {
+    devOnly: true,
     deleted: false,
 };
 
