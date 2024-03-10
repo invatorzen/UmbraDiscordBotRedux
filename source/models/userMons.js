@@ -5,9 +5,13 @@ const userMonsSchema = new Schema({
     userId: { type: String, required: true },
     username: { type: String, required: true },
     guildName: { type: String, required: true },
+    walkingPokemonIndex : { type: Number, required: false, default: null}, 
     pokemon: [{
         species: { type: String, required: true },
         gender: { type: Number, default: 0 }, // 0 = genderless, 1 = male, 2 = female
+        level: { type: Number, default: 1 },
+        xp: { type: Number, default: 0 },
+        xp_rate: { type: String, required: true },
         evs: {
             hp: { type: Number, default: 0 },
             atk: { type: Number, default: 0 },

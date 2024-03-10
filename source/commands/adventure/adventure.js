@@ -1,5 +1,6 @@
 const { Client, Interaction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, AttachmentBuilder } = require("discord.js");
 const UserMons = require('../../models/UserMons');
+const statData = require('../../assets/statData'); // Import statData
 const fs = require('fs');
 
 // Define the shiny odds as a constant
@@ -59,8 +60,8 @@ async function run({ interaction, client }) {
         collector.on("collect", async (i) => {
             let choice;
             let shiny = false;
-            let gender = 1
-
+            let gender = 1;
+        
             // Determine the choice and if it's shiny
             if (i.customId === "psypole") {
                 choice = "Psypole";
@@ -69,7 +70,7 @@ async function run({ interaction, client }) {
             } else if (i.customId === "boxeroo") {
                 choice = "Boxeroo";
             }
-
+        
             // Determine gender
             if (choice === "Psypole") {
                 // Psypole has a 50/50 chance of being male or female
@@ -78,20 +79,24 @@ async function run({ interaction, client }) {
                 // Seijitsu and Boxeroo have a 87.5% chance of being male
                 gender = Math.random() < 0.875 ? 1 : 2;
             }
-
+        
             // Check if the pokemon is shiny based on the odds
             const isShiny = Math.floor(Math.random() * SHINY_ODDS) === 0;
             if (isShiny) {
                 shiny = true;
             }
-
+        
+            // Fetch the xp_rate from statData based on the user's choice
+            const pokemonInfo = statData.pokemon.find(p => p.name === choice);
+            const xpRate = pokemonInfo ? pokemonInfo.xp_rate : 'medium_fast'; // Default to 1 if not found
+                
             // Add the chosen pokemon to the user's pokemon array
             await UserMons.findOneAndUpdate(
                 { userId: interaction.user.id },
-                { $push: { pokemon: { species: choice, shiny, gender } } },
+                { $push: { pokemon: { species: choice, shiny, gender, level: 5, xp_rate: xpRate } } },
                 { upsert: true }
             );
-
+        
             // Attach the image of the chosen pokemon
             let imagePath = `source/assets/monGraphics/${choice.charAt(0).toUpperCase() + choice.slice(1)}.png`;
             if (isShiny) {
@@ -100,18 +105,18 @@ async function run({ interaction, client }) {
             if (fs.existsSync(imagePath)) {
                 const attachment = new AttachmentBuilder(imagePath);
                 if (isShiny) {
-                    await i.reply({ content: `@${interaction.user.username} chose ⭐ *${choice}* ⭐ as their starter!`, files: [attachment] });
+                    await i.reply({ content: `${interaction.user.toString()} chose ⭐ *${choice}* ⭐ as their starter!`, files: [attachment] });
                 } else {
-                    await i.reply({ content: `@${interaction.user.username} chose ${choice} as their starter!`, files: [attachment] });
+                    await i.reply({ content: `${interaction.user.toString()} chose ${choice} as their starter!`, files: [attachment] });
                 }
             }
-
+        
             // Disable the buttons
             actionRow.components.forEach(component => {
                 component.setDisabled(true);
             });
             await reply.edit({ components: [actionRow] });
-
+        
             // You can update the embed here if needed
         });
     } catch (error) {
