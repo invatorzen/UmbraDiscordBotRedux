@@ -1,10 +1,19 @@
 const { Client, Interaction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const { ApplicationCommandOptionType } = require('discord-api-types/v9');
 const UserMons = require('../../models/UserMons');
 const { pokemon } = require('../../assets/statData');
 
 const data = {
     name: 'view_pokemon',
     description: 'View your Pokémon collection.',
+    options: [
+        {
+            name: 'start_index',
+            description: 'The starting index to view the Pokémon collection from.',
+            type: ApplicationCommandOptionType.Integer,
+            required: false,
+        }
+    ],
 };
 
 async function run({ interaction, client }) {
@@ -16,12 +25,16 @@ async function run({ interaction, client }) {
             return;
         }
 
+        // Parse the starting index from the options, default to 0 if not provided
+        let currentIndex = interaction.options.getInteger('start_index') !== null ? interaction.options.getInteger('start_index') - 1 : 0;
+
         // Prepare the data to display in the embedded message
         const totalPokemon = userMons.pokemon.length;
-        let currentIndex = 0; // Assuming the user starts from the first Pokémon
 
         const currentPokemon = userMons.pokemon[currentIndex];
+        console.log("Current Pokemon:", currentPokemon);
         const pokemonInfo = pokemon.find(p => p.name === currentPokemon.species);
+        console.log("Pokemon Info:", pokemonInfo);
         const pokemonName = currentPokemon.shiny ? `⭐ ${currentPokemon.species} ⭐` : currentPokemon.species; // Determines if shiny
 
         if (!pokemonInfo) {
@@ -34,11 +47,12 @@ async function run({ interaction, client }) {
             imageUrl = pokemonInfo.shiny_female_image_url;
         } else if (currentPokemon.shiny && pokemonInfo.shiny_image_url && pokemonInfo.shiny_image_url !== '') {
             imageUrl = pokemonInfo.shiny_image_url;
-        } else if (currentPokemon.female && !currentPokemon.female_image_url) {
-            imageUrl = pokemonInfo.image_url;
+        } else if (currentPokemon.female && pokemonInfo.female_image_url && pokemonInfo.female_image_url !== '') {
+            imageUrl = pokemonInfo.female_image_url;
         } else {
-            imageUrl = currentPokemon.image_url;
+            imageUrl = pokemonInfo.image_url;
         }
+        console.log("Image URL:", imageUrl);
 
         // Create an embedded message with the Pokémon information and navigation buttons
         const embed = new EmbedBuilder()
@@ -104,12 +118,12 @@ async function run({ interaction, client }) {
         
             // Update the embedded message with the next or previous Pokémon information
             const updatedEmbed = new EmbedBuilder()
-    .setTitle("Your Pokémon Collection")
-    .setDescription(`**${currentPokemon.shiny ? `⭐ ${currentPokemon.species} ⭐` : currentPokemon.species}**`)
-    .setImage(currentPokemon.shiny ? currentPokemon.shiny_image_url || pokemonInfo.shiny_image_url || pokemonInfo.image_url : currentPokemon.image_url || pokemonInfo.image_url)
-    .setFooter({ text: `Current Pokémon: ${currentIndex + 1}/${totalPokemon}` });
+                .setTitle("Your Pokémon Collection")
+                .setDescription(`**${currentPokemon.shiny ? `⭐ ${currentPokemon.species} ⭐` : currentPokemon.species}**`)
+                .setImage(currentPokemon.shiny ? currentPokemon.shiny_image_url || pokemonInfo.shiny_image_url || pokemonInfo.image_url : currentPokemon.image_url || pokemonInfo.image_url)
+                .setFooter({ text: `Current Pokémon: ${currentIndex + 1}/${totalPokemon}` });
 
-await i.update({ embeds: [updatedEmbed] });
+            await i.update({ embeds: [updatedEmbed] });
       });
     } catch (error) {
         console.error('Error:', error);

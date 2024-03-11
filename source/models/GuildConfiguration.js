@@ -12,6 +12,10 @@ const guildConfigurationSchema = new Schema({
         type: [String],
         default: [],
     },
+    pokemonInWild: {
+        type: [{ areaId: String, pokemonName: String, level: Number, isShiny: Boolean, xp_rate: String}],
+        default: [],
+    },
 });
 
 module.exports = model('GuildConfiguration', guildConfigurationSchema);

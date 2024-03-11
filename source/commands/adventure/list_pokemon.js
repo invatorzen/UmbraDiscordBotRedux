@@ -1,6 +1,7 @@
 const { Client, Interaction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { ApplicationCommandOptionType } = require('discord-api-types/v9');
 const UserMons = require('../../models/UserMons');
+const calculateMonLevelXp = require('../../utils/calculateMonLevelXp'); // Import the XP calculation module
 
 const MAX_ROWS = 25; // Maximum number of rows to display in total
 
@@ -47,8 +48,8 @@ async function run({ interaction, client }) {
             .setDescription(`Showing Pokémon ${start + 1} - ${end} of ${userMons.pokemon.length}`)
             .addFields(
                 pokemonList.map((pokemon, index) => ({
-                    name: `#${start + index + 1} - ${pokemon.species}`,
-                    value: `Gender: ${pokemon.gender === 0 ? 'N/A' : pokemon.gender === 1 ? 'M' : 'F'} | Level: ${pokemon.level}`,
+                    name: `#${start + index + 1} - ${pokemon.shiny ? `⭐ *${pokemon.species}* ⭐` : pokemon.species}`,
+                    value: `Gender: ${pokemon.gender === 0 ? 'N/A' : pokemon.gender === 1 ? 'M' : 'F'} | Level: ${pokemon.level} | XP: ${pokemon.xp}/${calculateMonLevelXp(pokemon.level, pokemon.xp_rate)}`,
                 }))
             );
 
@@ -96,8 +97,8 @@ async function run({ interaction, client }) {
                 .setDescription(`Showing Pokémon ${newStart + 1} - ${newEnd} of ${userMons.pokemon.length}`)
                 .addFields(
                     newPokemonList.map((pokemon, index) => ({
-                        name: `#${newStart + index + 1} - ${pokemon.species}`,
-                        value: `Gender: ${pokemon.gender === 0 ? 'N/A' : pokemon.gender === 1 ? 'M' : 'F'} | Level: ${pokemon.level}`,
+                        name: `#${newStart + index + 1} - ${pokemon.shiny ? `⭐ *${pokemon.species}* ⭐` : pokemon.species}`,
+                        value: `Gender: ${pokemon.gender === 0 ? 'N/A' : pokemon.gender === 1 ? 'M' : 'F'} | Level: ${pokemon.level} | XP: ${pokemon.xp}/${calculateMonLevelXp(pokemon.level, pokemon.xp_rate)}`,
                     }))
                 );
 
@@ -117,7 +118,6 @@ async function run({ interaction, client }) {
         await interaction.reply({ content: 'An error occurred while viewing your Pokémon collection.', ephemeral: true });
     }
 }
-
 const options = {
     devOnly: true,
     deleted: false,
