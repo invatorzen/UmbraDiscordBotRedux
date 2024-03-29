@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ApplicationCommandOptionType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder} = require('discord.js');
 const statData = require('../../assets/statData');
 const image = require('../../assets/images'); 
 
@@ -83,7 +83,7 @@ async function run({ interaction, client }) {
 
 const options = {
     deleted: false,
-    devOnly: true,
+    devOnly: false,
 };
 
 module.exports = { data, options, run };

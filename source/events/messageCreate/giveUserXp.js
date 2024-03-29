@@ -3,7 +3,7 @@ const Level = require('../../models/Level');
 const calculateLevelXp = require('../../utils/calculateLevelXp');
 const calculateMonLevelXp = require('../../utils/calculateMonLevelXp'); // Import the new module
 const cooldowns = new Set();
-const UserMons = require('../../models/UserMons'); // Import UserMons model
+const UserMons = require('../../models/userMons'); // Import UserMons model
 
 function getRandomXp(min, max) {
     min = Math.ceil(min);

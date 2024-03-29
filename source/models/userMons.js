@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 const { randomInt } = require('crypto');
 
 const userMonsSchema = new Schema({
-    userId: { type: String, required: true },
-    username: { type: String, required: true },
-    guildName: { type: String, required: true },
+    userId: { type: String, required: false },
+    username: { type: String, required: false },
+    guildName: { type: String, required: false },
     walkingPokemonIndex : { type: Number, required: false, default: null}, 
     pokemon: [{
         species: { type: String, required: true },

@@ -1,5 +1,5 @@
 const { Client, Interaction } = require('discord.js');
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 
 const data = {
     name: 'clear_pokemon',

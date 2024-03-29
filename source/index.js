@@ -25,16 +25,40 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 });
 
 // Schedule getRandomPokemonMessage
-const minInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
-const maxInterval = 15 * 60 * 1000; // 15 minutes in milliseconds
-const interval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
-setInterval(async () => {
+const minInterval = 15 * 60 * 1000; // 15 minutes in milliseconds
+const maxInterval = 35 * 60 * 1000; // 35 minutes in milliseconds
+
+function getRandomInterval() {
+    const intervalRange = maxInterval - minInterval;
+    return Math.floor(Math.random() * intervalRange) + minInterval;
+}
+
+async function spawnPokemonForGuild(guildConfig) {
+    try {
+        await getRandomPokemonMessage(client, guildConfig.guildId);
+    } catch (error) {
+        console.error(`Error spawning Pokémon for guild ${guildConfig.guildId}:`, error);
+    }
+}
+
+async function spawnPokemonForAllGuilds() {
     try {
         const guilds = await GuildConfiguration.find({});
-        for (const guildConfig of guilds) {
-            await getRandomPokemonMessage(client, guildConfig.guildId);
-        }
+        const promises = guilds.map(spawnPokemonForGuild);
+        await Promise.all(promises);
     } catch (error) {
-        console.error('Error triggering getRandomPokemonMessage:', error);
+        console.error('Error spawning Pokémon for all guilds:', error);
     }
-}, interval);
+}
+
+function spawnPokemonWithRandomInterval() {
+    const interval = getRandomInterval();
+    console.log(`A Pokémon will spawn in: ${interval / 60 / 1000} minutes`);
+    setTimeout(async () => {
+        await spawnPokemonForAllGuilds();
+        spawnPokemonWithRandomInterval();
+    }, interval);
+}
+
+// Initial spawn
+spawnPokemonWithRandomInterval();

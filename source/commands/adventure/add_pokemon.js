@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { ApplicationCommandOptionType } = require('discord-api-types/v9');
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 const statData = require('../../assets/statData');
 const { randomInt } = require('crypto');
 

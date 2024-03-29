@@ -1,5 +1,5 @@
 const { Client, Interaction, EmbedBuilder, ApplicationCommandOptionType } = require("discord.js");
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 
 const data = {
     name: 'follow',
@@ -48,7 +48,7 @@ async function run({ interaction, client }) {
 }
 
 const options = {
-    devOnly: true,
+    devOnly: false,
     deleted: false,
 };
 

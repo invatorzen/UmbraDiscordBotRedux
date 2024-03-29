@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType } = require("discord.js");
 const GuildConfiguration = require('../../models/GuildConfiguration');
 const { pokemon } = require('../../assets/statData');
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 
 const data = {
     name: 'catch',
@@ -33,14 +33,23 @@ async function run({ interaction, client }) {
     // Get the user's guess from the interaction
     const guess = interaction.options.getString('mon');
 
-    // Retrieve the current wild Pokémon's name and area ID
-    const { areaId, pokemonName, level, isShiny, xp_rate } = await getCurrentWildPokemon(interaction.guildId);
-
-    // Check if there is a wild Pokémon currently in the area
-    if (!areaId || !pokemonName) {
-        await interaction.reply({ content: 'There is no wild Pokémon currently.', ephemeral: true });
+    // Check if the user has any Pokémon
+    const user = await UserMons.findOne({ userId: interaction.user.id });
+    if (!user || !user.pokemon || user.pokemon.length === 0) {
+        await interaction.reply({ content: "You can't catch any Pokémon until you get a starter. Try using `/adventure`!", ephemeral: true });
         return;
     }
+
+    // Retrieve the current wild Pokémon's name and area ID
+    const wildPokemon = await getCurrentWildPokemon(interaction.guildId);
+
+    // Check if there is a wild Pokémon currently in the area
+    if (!wildPokemon || !wildPokemon.pokemonName) {
+        await interaction.reply({ content: 'There are no wild Pokémon around! Try again later.', ephemeral: true });
+        return;
+    }
+
+    const { areaId, pokemonName, level, isShiny, xp_rate } = wildPokemon;
 
     // Check if the user is using the catch command in the correct channel
     if (areaId !== interaction.channelId) {
@@ -65,6 +74,9 @@ async function run({ interaction, client }) {
         const user = await UserMons.findOne({ userId: interaction.user.id });
         if (user) {
             user.pokemon.push({
+                userName: interaction.user.username,
+                guildId: interaction.guild.id,
+                userId: interaction.user.id,
                 level: level,
                 species: pokemonData.name,
                 gender: Math.random() < 0.5 ? 1 : 2, // 50/50 chance of being male or female
@@ -84,7 +96,7 @@ async function run({ interaction, client }) {
             { new: true }
         );
 
-        await interaction.reply({ content: 'Congratulations! You caught the Pokémon!', ephemeral: true });
+        await interaction.reply({ content: `Congratulations, ${interaction.user.toString()}! You caught the Pokémon!`, ephemeral: false });
     } else {
         // User's guess is incorrect
         console.log(`pokemonName: ${pokemonName} guess: ${guess}`)
@@ -93,7 +105,7 @@ async function run({ interaction, client }) {
 }
 
 const options = {
-    devOnly: true,
+    devOnly: false,
     deleted: false,
 };
 

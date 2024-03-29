@@ -1,6 +1,6 @@
 const { Client, Interaction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const { ApplicationCommandOptionType } = require('discord-api-types/v9');
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 const { pokemon } = require('../../assets/statData');
 
 const data = {
@@ -43,11 +43,11 @@ async function run({ interaction, client }) {
         }
 
         let imageUrl;
-        if (currentPokemon.shiny && currentPokemon.female && pokemonInfo.shiny_female_image_url && pokemonInfo.shiny_female_image_url !== '') {
+        if (currentPokemon.shiny && currentPokemon.gender === 2 && pokemonInfo.shiny_female_image_url !== '') {
             imageUrl = pokemonInfo.shiny_female_image_url;
-        } else if (currentPokemon.shiny && pokemonInfo.shiny_image_url && pokemonInfo.shiny_image_url !== '') {
+        } else if (currentPokemon.shiny && pokemonInfo.shiny_image_url !== '') {
             imageUrl = pokemonInfo.shiny_image_url;
-        } else if (currentPokemon.female && pokemonInfo.female_image_url && pokemonInfo.female_image_url !== '') {
+        } else if (currentPokemon.gender === 2 && pokemonInfo.female_image_url !== '') {
             imageUrl = pokemonInfo.female_image_url;
         } else {
             imageUrl = pokemonInfo.image_url;
@@ -106,21 +106,21 @@ async function run({ interaction, client }) {
             }
         
             let imageUrl;
-            if (currentPokemon.shiny && currentPokemon.female && pokemonInfo.shiny_female_image_url && pokemonInfo.shiny_female_image_url !== '') {
+            if (currentPokemon.shiny && currentPokemon.gender === 2 && pokemonInfo.shiny_female_image_url !== '') {
                 imageUrl = pokemonInfo.shiny_female_image_url;
-            } else if (currentPokemon.shiny && pokemonInfo.shiny_image_url && pokemonInfo.shiny_image_url !== '') {
+            } else if (currentPokemon.shiny && pokemonInfo.shiny_image_url !== '') {
                 imageUrl = pokemonInfo.shiny_image_url;
-            } else if (currentPokemon.female && !currentPokemon.female_image_url) {
-                imageUrl = pokemonInfo.image_url;
+            } else if (currentPokemon.gender === 2 && pokemonInfo.female_image_url !== '') {
+                imageUrl = pokemonInfo.female_image_url;
             } else {
-                imageUrl = currentPokemon.image_url;
+                imageUrl = pokemonInfo.image_url;
             }
         
             // Update the embedded message with the next or previous Pokémon information
             const updatedEmbed = new EmbedBuilder()
                 .setTitle("Your Pokémon Collection")
                 .setDescription(`**${currentPokemon.shiny ? `⭐ ${currentPokemon.species} ⭐` : currentPokemon.species}**`)
-                .setImage(currentPokemon.shiny ? currentPokemon.shiny_image_url || pokemonInfo.shiny_image_url || pokemonInfo.image_url : currentPokemon.image_url || pokemonInfo.image_url)
+                .setImage(imageUrl)
                 .setFooter({ text: `Current Pokémon: ${currentIndex + 1}/${totalPokemon}` });
 
             await i.update({ embeds: [updatedEmbed] });
@@ -135,7 +135,7 @@ async function run({ interaction, client }) {
 }
 
 const options = {
-    devOnly: true,
+    devOnly: false,
     deleted: false,
 };
 

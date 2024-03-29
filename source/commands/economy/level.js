@@ -49,6 +49,8 @@ async function run({ interaction, client }) {
   });
 
   let currentRank = allLevels.findIndex((level) => level.userId === targerUserId) + 1;
+  
+  const status = targetUserObj.presence ? targetUserObj.presence.status : 'offline';
 
   const rank = new canvacord.Rank()
     .setAvatar(targetUserObj.user.displayAvatarURL({size:256}))
@@ -56,7 +58,7 @@ async function run({ interaction, client }) {
     .setLevel(fetchedLevel.level)
     .setCurrentXP(fetchedLevel.xp)
     .setRequiredXP(calculateLevelXp(fetchedLevel.level))
-    .setStatus(targetUserObj.presence.status)
+    .setStatus(status)
     .setProgressBar('#FFC300', 'COLOR')
     .setUsername(targetUserObj.user.username)
     .setDiscriminator(targetUserObj.user.discriminator);

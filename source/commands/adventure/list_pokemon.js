@@ -1,6 +1,6 @@
 const { Client, Interaction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { ApplicationCommandOptionType } = require('discord-api-types/v9');
-const UserMons = require('../../models/UserMons');
+const UserMons = require('../../models/userMons');
 const calculateMonLevelXp = require('../../utils/calculateMonLevelXp'); // Import the XP calculation module
 
 const MAX_ROWS = 25; // Maximum number of rows to display in total
@@ -119,7 +119,7 @@ async function run({ interaction, client }) {
     }
 }
 const options = {
-    devOnly: true,
+    devOnly: false,
     deleted: false,
 };
 
